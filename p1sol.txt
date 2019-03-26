@@ -1,0 +1,38 @@
+
+// Práctica 1 - NoSQL
+// Nombre 1:Carlos Lozano
+// Nombre 2:Marina Jimenez
+// Nombre 3:
+// Instrucciones: ponerso lo codigo ejecutable.
+// observaciones:
+
+// P1 (copiar consulta en la linea de abajo)
+db.comments.find().skip(100).pretty()
+
+// P2 (copiar consulta en la linea de abajo)
+db.comments.find({"content.authorNick": "UROBOROS3"}).count()
+
+// P3 (copiar consulta en la linea de abajo)
+db.comments.find({"_id.collection" : "238449142","_id.id" : "811961925" },{"content.authorNick":true})
+
+
+// P4 (copiar consulta en la linea de abajo)
+db.comments.find({"content.likedBy":"Don_Fulgencio"}).count()
+
+// P5 (copiar consulta en la linea de abajo)
+db.user.drop()
+db.comments.find({"content.authorNick":"La.tralla"}).forEach(function(doc){db.user.insert(doc)})
+db.user.count()
+
+
+// P6 (copiar consulta en la linea de abajo)
+db.comments.find({"content.comunidad":"1"}).count()/db.comments.count()*100
+
+// P7 (copiar consulta en la linea de abajo)
+db.comments.distinct("content.authorNick")
+
+// P8 (copiar consulta en la linea de abajo)
+db.pru.find({},{_id:false}).sort({b:1,a:-1})
+
+// P9 (copiar consulta en la linea de abajo)
+

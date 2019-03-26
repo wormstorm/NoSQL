@@ -1,0 +1,64 @@
+﻿//Bases de datos NoSQL - práctica 6
+
+//Nombre1: Carlos Lozano Casado 
+//Nombre2: Marina Jimenez Garrido
+//Nombre3:
+
+//Observaciones:
+
+//P1a Insert:
+
+db.lugares.insert({nombre:"María Zambrano", tipo:"biblioteca", pais:"España", 
+                   posicion: {type:"Point", coordinates:[-3.7322752,40.447748]}})
+//P1b Indice:
+
+db.lugares.createIndex({ posicion: "2dsphere" })
+{
+	"createdCollectionAutomatically" : true,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+
+//P2 Consulta:
+db.lugares.find( { 'posicion' : { $near : { $geometry: { type: 'Point', coordinates: [-3.7251149,40.4381963] } ,$minDistance: 1500 }} },{nombre:1,tipo:1,_id:0} ).pretty()
+
+//P3a Creación de índices:
+db.plano.createIndex({punto:1},"ipunto")
+db.plano.createIndex({desc:1},"idesc")
+
+//P3b Comentario sobre dif de tamaños:
+ocupa mas el ipunto porque crea una entrada por cada valor del array
+
+//P4 Consulta:
+db.plano.find({"punto.0":{$gt:480}}).count()
+
+//P5a Índice (Sí/No):Si
+//P5b ¿Cuál? (si sí):ipunto
+
+//P6 Consulta:
+db.plano.find({ punto: { $geoWithin: { $polygon: [ [0,0 ], [3,0], [ 3 , 3 ],[0,3] ] } }   } )
+
+//P7 Creación de índice:
+db.plano.createIndex({punto:"2d"})
+
+//P8a ¿Sé puede crear el índice?(Sí/No):
+no
+//P8b ¿Por qué? (una frase):
+porque tiene valores mayores de 180 y eso excede el limite de mongo
+
+//P9a ¿Sé puede crear el índice para mejorar?(Sí/No):
+SI
+
+//P9b Si la respuesta es sí, copiar la instrucción para crearlo. Si es no, escribir una frase explicando por qué.
+
+db.plano.createIndex({punto:1,desc:1})
+
+//P10 Fragmento de código:
+db.runCommand({ 
+               geoNear: "lugares",
+               near:{type:"Point",coordinates:[-3.724155,40.438323]},
+               spherical: true,
+               query:{nombre:"María Zambrano"}})
+
+

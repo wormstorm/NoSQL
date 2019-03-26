@@ -1,0 +1,40 @@
+﻿
+// Práctica 2 - NoSQL
+// Nombre 1:Carlos Lozano Casado
+// Nombre 2:Marina Jiménez Garrido
+// Nombre 3:
+// Instrucciones: ponerso lo codigo ejecutable.
+// observaciones:
+
+// P1 (copiar consulta en la linea de abajo)
+db.libros.find({opiniones:{$exists:false},precio:{$gt:12}},{titulo:1,precio:1,_id:0})
+
+// P2 (copiar consulta en la linea de abajo)
+db.libros.find({precio:{$type:"string"}}).count()
+
+// P3 (copiar consulta en la linea de abajo)
+db.libros.find({"opiniones.usuario":{'$nin':["bertoldo"]}},{titulo:1,_id:0}).pretty()
+
+// P4 (copiar consulta en la linea de abajo)
+db.libros.find({genero:{$in:["terror","romance"]}},{titulo:1,_id:0}).pretty()
+
+// P5 (copiar consulta en la linea de abajo)
+db.libros.find({$and:[{genero:"romance"},{genero:{'$nin':["terror"]}}]}).count()
+
+// P6 (copiar consulta en la linea de abajo)
+db.libros.find({"opiniones.0.puntos":{$gt:5}}).count()
+
+// P7 (copiar consulta en la linea de abajo)
+db.libros.find({$or:[{"opiniones.usuario":"herminia"},{precio:{$lt:10}}]}).count()
+
+// P8 (copiar consulta en la linea de abajo)
+db.libros.find({"opiniones.2":{$exists:true}},{titulo:1,opiniones:{$slice:[2,1]},_id:0}).pretty()
+
+// P9 (copiar consulta en la linea de abajo)
+db.libros.find({genero:"romance"},{_id:0,titulo:1,opiniones:{$slice:1},opiniones:{$elemMatch:{usuario:"bertoldo",puntos:{$gte:8} } } } ).pretty()
+
+
+// P10 (copiar consulta en la linea de abajo)
+db.libros.find({$expr:{$gte:[{$subtract:["$edicion.actual.year","$edicion.primera"]},10]}},{titulo:1,_id:0}).pretty()
+
+

@@ -1,0 +1,105 @@
+Bases de datos NoSQL - práctica 4
+
+#Nombre1: Carlos Lozano Casado
+#Nombre2: Marina Jiménez Garrido
+#Nombre3:
+
+#Observaciones:
+
+#P1 Consulta:
+db.user.aggregate([
+			{$sortByCount: "$verified"}
+		])
+
+#P2 Consulta:
+db.user.aggregate([{$group:{ _id:"$verified",media: {$avg:"$followers"}}}])
+
+#P3 Consulta:
+
+db.user.aggregate([
+                  {$group:{ _id:null,
+                            media: {$avg:"$followers"}
+                          } 
+                  }
+		])
+
+#P4 Consulta:
+
+db.user.aggregate([
+                  {$group:{ _id:"$tweets.original",
+                            menciones: {$avg:"$mentions"}
+                          } 
+                  },
+                  {$sort: {_id:1}
+                  }
+		])
+
+#P5 Consulta:
+
+db.user.aggregate([
+                  {$sortByCount:"$location" 
+                  },
+                  {$match: {_id:{$ne: ""}}
+                  },
+                  {$group:{ _id:null,
+                          count:{$sum:"$count"}
+                          }
+                  }
+		])
+
+#P6 Consulta:
+
+db.user.aggregate([
+                  {$group:{ _id:{$year:"$created_at"},
+                            total: {$sum:1},
+                            media: {$avg:"$tweets.all"}
+                          } 
+                  },
+                  {$sort: {_id:1}
+                  }
+		])
+
+#P7 Consulta:
+
+db.user.aggregate([
+                  {$group:{ _id:{year:{$year:"$created_at"},month: { $month: "$created_at" }},
+                            total: {$sum:1},
+                            media: {$avg:"$tweets.all"}
+                          } 
+                  },
+                  {$sort: {_id:1}
+                  }
+		])
+
+#P8 Consulta:
+
+db.user.aggregate([
+                  {$bucket:{groupBy: "$tweets.total",
+                            boundaries:[0,25,50,100,200],
+                            default:"Other",
+                            output:{"media":{$avg:"$opinion.hpref"}}
+                           }
+                  }
+		])
+
+#P9 Consulta:
+
+db.user.aggregate([
+                  {$group:{ _id:"$tweets.total",
+                            media:{$avg:{
+                                         $expr:
+                                               {$cond:{
+                                                 if:{"$opinion.hp":{$eq:0}},
+                                                 then: {$divide: ["$opinion.tp",1]},
+                                                 else: {$divide: ["$opinion.tp","$opinion.hp"]}   
+                                                      }
+                                               }
+                                         
+                                        }
+                                  }
+                          }
+                  }
+		])
+
+
+

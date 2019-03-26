@@ -1,0 +1,69 @@
+﻿
+//Práctica 7 -  NoSQL - Solución
+//Nombre 1: Carlos Lozano Casado
+//Nombre 2:Marina Jimenez Garrido
+//Nombre 3
+//Observaciones:
+
+// Nota: no escribir código tras las // sino en la línea de abajo
+
+//Respuestas
+
+//P1#
+//Índice:
+
+db.tweet.createIndex({text:"text"})
+
+//Consulta: 
+
+db.tweet.find({$text:{$search:"USA"}}).count()
+
+//P2
+#Consulta: 
+ 
+ db.tweet.find({$text:{$search:"USA WIN"}}).count()
+
+//P3
+#Consulta: 
+
+db.tweet.find({$text:{$search:"-USA WIN"}}).count()
+
+//P4
+#Consulta:
+
+db.tweet.find({$text:{$search:"lie"}},{text:1,score:1,_id:0,score:{$meta:"textScore"}}).sort({score:{$meta:"textScore"}}).pretty()
+
+//5#:
+//a)
+db.tweet.find({hlabel:-1,$text:{$search:"lie"}}).count()/db.tweet.find({hlabel:-1}).count()*100
+//b)
+db.tweet.find({tlabel:-1,$text:{$search:"lie"}}).count()/db.tweet.find({tlabel:-1}).count()*100
+
+//6
+#Consulta:
+
+db.tweet.aggregate([
+		{$match: {$text:{$search:"lie"}}},		
+		{$group:{_id:"$user.screen",			
+			total:{$sum:1}
+		}},
+		{$sort:{total:-1}}
+]).pretty()
+
+//P7#
+//a)
+	"executionTimeMillis" : 27,
+	"totalKeysExamined" : 0,
+	"totalDocsExamined" : 17834,
+//b)
+db.tweet.createIndex({tlabel:1,created_at:-1})
+
+//c)
+		"executionTimeMillis" : 6,
+		"totalKeysExamined" : 5381,
+		"totalDocsExamined" : 0
+
+//P8#
+//Consulta:
+
+db.prueba.explain().find({a:2,b:1}).hint("ib")
